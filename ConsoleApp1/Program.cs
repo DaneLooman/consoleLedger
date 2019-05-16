@@ -15,6 +15,7 @@ namespace ConsoleApp1
 
             //allows for logging in and account creation. Once completed flips loggedIn to true and sets current User
             while (loggedIn == false){
+                Console.Clear();
                 Console.WriteLine("Type your email address to log in or \"new\" if you are a new user");
                 string result = Console.ReadLine().ToLower();
 
@@ -74,7 +75,27 @@ namespace ConsoleApp1
                     Console.WriteLine("Sorry. We could not find a user with that email address. Please try again.");
                 }          
             }
-            Console.WriteLine(currentUser);
+            while (loggedIn == true)
+            {
+                Console.Clear();
+                Console.WriteLine(
+                   currentUser.UserAcctName + " Logged In\n Options:  \n 1: Deposit\n 2: Withdraw\n 3: Balance Check\n 4: History\n 5: Logout");
+                int selection = Convert.ToInt32(Console.ReadLine());
+                if (selection == 1) {
+                    Console.WriteLine("You did a Deposit");
+                } else if (selection == 2){
+                    Console.WriteLine("You withdrew");
+                } else if (selection == 3) {
+                    Console.WriteLine("This is your balance");
+                } else if (selection == 4) {
+                    Console.WriteLine("This is your history");
+                } else if (selection == 5) {
+                    currentUser = null;
+                    loggedIn = false;
+                    Console.Clear();
+                } else {}
+            }
+            Console.WriteLine("You have logged out");
             Console.Read();
         }
     }
