@@ -82,6 +82,42 @@ namespace ConsoleApp1
                 }
             }
         }
+        //Seed Data Dummy User and Transactions. 
+        static Tuple<List<User>, List<Transaction>> SeedData(List<User> _users, List<Transaction> _transactions)
+        {
+            List<User> users = _users;
+            List<Transaction> transactions = _transactions;
+            if (users.Count == 0 && transactions.Count == 0)
+            {
+                User demoUser = new User
+                {
+                    UserAcctId = 1,
+                    UserAcctName = "test@test.com",
+                    UserAcctPassword = "password"
+                };
+                users.Add(demoUser);
+                Transaction demoDeposit = new Transaction
+                {
+                    Amt = 99.50m,
+                    Id = 1,
+                    Memo = "First Deposit",
+                    UserId = 1
+                };
+                Transaction demoWithdrawl = new Transaction
+                {
+                    Amt = -15.25m,
+                    Id = 2,
+                    Memo = "First Withdrawl",
+                    UserId = 1
+                };
+                transactions.Add(demoDeposit);
+                transactions.Add(demoWithdrawl);
+                return new Tuple<List<User>, List<Transaction>>(users, transactions);
+
+            } else {
+                return new Tuple<List<User>, List<Transaction>>(users, transactions);
+            };
+        }
         // Deposit Transaction Creation
         static Transaction Deposit(int userId)
         {
@@ -123,6 +159,9 @@ namespace ConsoleApp1
         {
             List<User> userAccts = new List<User>();
             List<Transaction> transactions = new List<Transaction>();
+            var seedResult = SeedData(userAccts, transactions);
+            userAccts = seedResult.Item1;
+            transactions = seedResult.Item2;
             User currentUser = new User();
             bool loggedIn = false; 
 
