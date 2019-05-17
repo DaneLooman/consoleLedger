@@ -41,15 +41,22 @@ namespace ConsoleApp1
                 else if (selection == 2)
                 {
                     Transaction transaction = Withdrawl(user.UserAcctId);
-                    Console.WriteLine("Are you sure you want to Withdrawl $" + transaction.Amt + "? Y/N");
+                    Console.WriteLine("Are you sure you want to Withdrawl $" + (transaction.Amt * -1) + "? Y/N");
                     string input = Console.ReadLine();
                     if (input == "Y")
-                    {
-                        transaction.Id = transactions.Count + 1;
-                        transactions.Add(transaction);
-                        Console.WriteLine("Withdrawl Successful. Press Enter.");
-                        Console.ReadLine();
-                        return new Tuple<bool, List<Transaction>>(true, transactions);
+                    { if ((Balance(user.UserAcctId, transactions) + transaction.Amt) > 0)
+                        {
+                            transaction.Id = transactions.Count + 1;
+                            transactions.Add(transaction);
+                            Console.WriteLine("Withdrawl Successful. Press Enter.");
+                            Console.ReadLine();
+                            return new Tuple<bool, List<Transaction>>(true, transactions);
+                        } else
+                        {
+                            Console.WriteLine("Withdrawl Cancelled. Balance too low. Press Enter.");
+                            Console.ReadLine();
+                            return new Tuple<bool, List<Transaction>>(true, transactions);
+                        }
                     }
                     else
                     {
