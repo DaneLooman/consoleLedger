@@ -40,9 +40,23 @@ namespace ConsoleApp1
                 }
                 else if (selection == 2)
                 {
-                    Console.WriteLine("You withdrew. Press Enter.");
-                    Console.ReadLine();
-                    return new Tuple<bool, List<Transaction>>(true, transactions);
+                    Transaction transaction = Withdrawl(user.UserAcctId);
+                    Console.WriteLine("Are you sure you want to Withdrawl $" + transaction.Amt + "? Y/N");
+                    string input = Console.ReadLine();
+                    if (input == "Y")
+                    {
+                        transaction.Id = transactions.Count + 1;
+                        transactions.Add(transaction);
+                        Console.WriteLine("Withdrawl Successful. Press Enter.");
+                        Console.ReadLine();
+                        return new Tuple<bool, List<Transaction>>(true, transactions);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Withdrawl Cancelled. Press Enter.");
+                        Console.ReadLine();
+                        return new Tuple<bool, List<Transaction>>(true, transactions);
+                    }
                 }
                 else if (selection == 3)
                 {
@@ -68,7 +82,7 @@ namespace ConsoleApp1
                 }
             }
         }
-
+        // Deposit Transaction Creation
         static Transaction Deposit(int userId)
         {
             Console.WriteLine("How much would you like to deposit?");
@@ -77,14 +91,29 @@ namespace ConsoleApp1
             Console.WriteLine("Please add a note to this transaction.");
             string inputMemo = Console.ReadLine();
 
-
             Transaction transaction = new Transaction
             {
                 Amt = inputAmt,
                 Memo = inputMemo,
                 UserId = userId
             };
+            return transaction;
+        }
+        //Withdrawl Transaction Creation
+        static Transaction Withdrawl(int userId)
+        {
+            Console.WriteLine("How much would you like to Withdrawl?");
+            decimal inputAmt = Convert.ToDecimal(Console.ReadLine());
 
+            Console.WriteLine("Please add a note to this transaction.");
+            string inputMemo = Console.ReadLine();
+
+            Transaction transaction = new Transaction
+            {
+                Amt = inputAmt * -1,
+                Memo = inputMemo,
+                UserId = userId
+            };
             return transaction;
         }
 
