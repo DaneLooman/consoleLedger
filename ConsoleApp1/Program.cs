@@ -10,7 +10,6 @@ namespace ConsoleApp1
     {
     //<------------Methods------------------------------------->
         //Start Menu (create account, log in and run main menu, or shut down program)
-
        static Tuple<bool, List<User>, List<Transaction>> Start(List<User> users, List<Transaction> transactions)
         {
             User currentUser = new User();
@@ -139,9 +138,8 @@ namespace ConsoleApp1
             }
             return new Tuple<bool, List<User>, List<Transaction>>(true, users, transactions);
         }
-            
-         
-        //Main Menu method returns a bool for if the user is logged in and returns a new version of the transaction list
+                    
+        //Main Menu method once a User is logged in.
         static Tuple<bool, List<Transaction>> MainMenu(User user, List<Transaction> _transactions)
         {
             {
