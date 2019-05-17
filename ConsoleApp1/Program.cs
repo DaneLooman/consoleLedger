@@ -1,4 +1,5 @@
 ﻿using ConsoleApp1.Models.UserModels;
+using ConsoleApp1.Models.UserTransactionModels;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +8,30 @@ namespace ConsoleApp1
 {
     class Program
     {
+        static Transaction Deposit(int userId)
+        {
+            Console.WriteLine("How much would you like to deposit?");
+            decimal inputAmt = Convert.ToDecimal(Console.ReadLine());
+
+            Console.WriteLine("Please add a note to this transaction.");
+            string inputMemo = Console.ReadLine();
+
+
+            Transaction transaction = new Transaction
+            {
+                Amt = inputAmt,
+                Memo = inputMemo,
+                UserId = userId
+            };
+
+            return transaction;
+        }
+
+
+
+
+
+
         static void Main(string[] args)
         {
             List<User> userAccts = new List<User>();
@@ -25,21 +50,21 @@ namespace ConsoleApp1
 
                     if (userAccts.FindIndex(u => u.UserAcctName == emailResult) < 0) {
                         currentUser.UserAcctName = emailResult;
-                            Console.WriteLine("Please enter a passowrd");
+                            Console.WriteLine("Please enter a password");
                             string passResult1 = Console.ReadLine();
 
-                            Console.WriteLine("Please re-enter a passowrd");
+                            Console.WriteLine("Please re-enter a password");
                             string passResult2 = Console.ReadLine();
 
                             if (passResult1 == passResult2) {
                             }
                             else {
                                 while (passResult1 != passResult2) { 
-                                    Console.WriteLine("Sorry. Your passowrd did not match. Please try again.");
-                                    Console.WriteLine("Please enter a passowrd");
+                                    Console.WriteLine("Sorry. Your password did not match. Please try again.");
+                                    Console.WriteLine("Please enter a password");
                                     passResult1 = Console.ReadLine();
 
-                                    Console.WriteLine("Please re-enter a passowrd");
+                                    Console.WriteLine("Please re-enter a password");
                                     passResult2 = Console.ReadLine();
                                 }
                             }
