@@ -147,74 +147,99 @@ namespace ConsoleApp1
                 Console.Clear();
                 Console.WriteLine(
                    user.UserAcctName + " Logged In\n Options:  \n 1: Deposit\n 2: Withdraw\n 3: Balance Check\n 4: History\n 5: Logout");
-                int selection = Convert.ToInt32(Console.ReadLine());
-                if (selection == 1)
+                int selection;
+                bool success = Int32.TryParse(Console.ReadLine(),out selection);
+                if (success)
                 {
-                    Transaction transaction = Deposit(user.UserAcctId);
-                    Console.WriteLine("Are you sure you want to Deposit $" + transaction.Amt + "? Y/N");
-                    string input = Console.ReadLine().ToLower();
-                    if (input == "y")
+                    if (selection == 1)
                     {
-                        transaction.Id = transactions.Count + 1;
-                        transactions.Add(transaction);
-                        Console.WriteLine("Deposit Successful. Press Enter.");
-                        Console.ReadLine();
-                        return new Tuple<bool, List<Transaction>>(true, transactions);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Deposit Cancelled. Press Enter.");
-                        Console.ReadLine();
-                        return new Tuple<bool, List<Transaction>>(true, transactions);
-                    }                  
-                }
-                else if (selection == 2)
-                {
-                    Transaction transaction = Withdrawl(user.UserAcctId);
-                    Console.WriteLine("Are you sure you want to Withdrawl $" + (transaction.Amt * -1) + "? Y/N");
-                    string input = Console.ReadLine().ToLower();
-                    if (input == "y")
-                    { if ((Balance(user.UserAcctId, transactions) + transaction.Amt) > 0)
+                        Transaction transaction = Deposit(user.UserAcctId);
+                        if (transaction != null)
                         {
-                            transaction.Id = transactions.Count + 1;
-                            transactions.Add(transaction);
-                            Console.WriteLine("Withdrawl Successful. Press Enter.");
-                            Console.ReadLine();
-                            return new Tuple<bool, List<Transaction>>(true, transactions);
+                            Console.WriteLine("Are you sure you want to Deposit $" + transaction.Amt + "? Y/N");
+                            string input = Console.ReadLine().ToLower();
+                            if (input == "y")
+                            {
+                                transaction.Id = transactions.Count + 1;
+                                transactions.Add(transaction);
+                                Console.WriteLine("Deposit Successful. Press Enter.");
+                                Console.ReadLine();
+                                return new Tuple<bool, List<Transaction>>(true, transactions);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Deposit Cancelled. Press Enter.");
+                                Console.ReadLine();
+                                return new Tuple<bool, List<Transaction>>(true, transactions);
+                            }
                         } else
                         {
-                            Console.WriteLine("Withdrawl Cancelled. Balance too low. Press Enter.");
-                            Console.ReadLine();
                             return new Tuple<bool, List<Transaction>>(true, transactions);
                         }
+
                     }
-                    else
+                    else if (selection == 2)
+                    {   
+                        Transaction transaction = Withdrawl(user.UserAcctId);
+                        if (transaction != null)
+                        {
+                            Console.WriteLine("Are you sure you want to Withdrawl $" + (transaction.Amt * -1) + "? Y/N");
+                            string input = Console.ReadLine().ToLower();
+                            if (input == "y")
+                            {
+                                if ((Balance(user.UserAcctId, transactions) + transaction.Amt) > 0)
+                                {
+                                    transaction.Id = transactions.Count + 1;
+                                    transactions.Add(transaction);
+                                    Console.WriteLine("Withdrawl Successful. Press Enter.");
+                                    Console.ReadLine();
+                                    return new Tuple<bool, List<Transaction>>(true, transactions);
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Withdrawl Cancelled. Balance too low. Press Enter.");
+                                    Console.ReadLine();
+                                    return new Tuple<bool, List<Transaction>>(true, transactions);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Withdrawl Cancelled. Press Enter.");
+                                Console.ReadLine();
+                                return new Tuple<bool, List<Transaction>>(true, transactions);
+                            }
+                        } else
+                        {
+                            return new Tuple<bool, List<Transaction>>(true, transactions);
+                        }
+                        
+                    }
+                    else if (selection == 3)
                     {
-                        Console.WriteLine("Withdrawl Cancelled. Press Enter.");
+                        Console.WriteLine("Your balance is $" + Balance(user.UserAcctId, transactions) + ". Press Enter.");
                         Console.ReadLine();
                         return new Tuple<bool, List<Transaction>>(true, transactions);
                     }
-                }
-                else if (selection == 3)
+                    else if (selection == 4)
+                    {
+                        History(user.UserAcctId, transactions);
+                        Console.WriteLine("This is the end of your history. Press Enter.");
+                        Console.ReadLine();
+                        return new Tuple<bool, List<Transaction>>(true, transactions);
+                    }
+                    else if (selection == 5)
+                    {
+                        return new Tuple<bool, List<Transaction>>(false, transactions);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Please only input numbers 1, 2, 3, 4, or 5.");
+                        Console.ReadLine();
+                        return new Tuple<bool, List<Transaction>>(true, transactions);
+                    }
+                } else
                 {
-                    Console.WriteLine("Your balance is $" + Balance(user.UserAcctId, transactions) + ". Press Enter.");
-                    Console.ReadLine();
-                    return new Tuple<bool, List<Transaction>>(true, transactions);
-                }
-                else if (selection == 4)
-                {
-                    History(user.UserAcctId, transactions);
-                    Console.WriteLine("This is the end of your history. Press Enter.");
-                    Console.ReadLine();
-                    return new Tuple<bool, List<Transaction>>(true, transactions);
-                }
-                else if (selection == 5)
-                {
-                    return new Tuple<bool, List<Transaction>>(false, transactions);
-                }
-                else
-                {
-                    Console.WriteLine("Please only input numbers.");
+                    Console.WriteLine("Please only input numbers. Press enter to try again.");
                     Console.ReadLine();
                     return new Tuple<bool, List<Transaction>>(true, transactions);
                 }
@@ -262,36 +287,56 @@ namespace ConsoleApp1
         static Transaction Deposit(int userId)
         {
             Console.WriteLine("How much would you like to deposit?");
-            decimal inputAmt = Convert.ToDecimal(Console.ReadLine());
+            decimal inputAmt;
+            bool success = decimal.TryParse(Console.ReadLine(),out inputAmt);
 
-            Console.WriteLine("Please add a note to this transaction.");
-            string inputMemo = Console.ReadLine();
-
-            Transaction transaction = new Transaction
+            if (success)
             {
-                Amt = inputAmt,
-                Memo = inputMemo,
-                UserId = userId
-            };
-            return transaction;
+                Console.WriteLine("Please add a note to this transaction.");
+                string inputMemo = Console.ReadLine();
+
+                Transaction transaction = new Transaction
+                {
+                    Amt = inputAmt,
+                    Memo = inputMemo,
+                    UserId = userId
+                };
+                return transaction;
+            }
+            else
+            {
+                Console.WriteLine("Please only enter values in 00.00 format with no symbols. Press Enter to rety.");
+                Console.ReadLine();
+                return null;
+            }          
         }
         
         //Withdrawl Transaction Creation
         static Transaction Withdrawl(int userId)
         {
             Console.WriteLine("How much would you like to Withdrawl?");
-            decimal inputAmt = Convert.ToDecimal(Console.ReadLine());
+            decimal inputAmt;
+            bool success = Decimal.TryParse(Console.ReadLine(), out inputAmt);
 
-            Console.WriteLine("Please add a note to this transaction.");
-            string inputMemo = Console.ReadLine();
-
-            Transaction transaction = new Transaction
+            if (success)
             {
-                Amt = inputAmt * -1,
-                Memo = inputMemo,
-                UserId = userId
-            };
-            return transaction;
+                Console.WriteLine("Please add a note to this transaction.");
+                string inputMemo = Console.ReadLine();
+
+                Transaction transaction = new Transaction
+                {
+                    Amt = inputAmt * -1,
+                    Memo = inputMemo,
+                    UserId = userId
+                };
+                return transaction;
+            } else
+            {
+                Console.WriteLine("Please only enter values in 00.00 format with no symbols. Press Enter to rety.");
+                Console.ReadLine();
+                return null;
+            }
+            
         }
        
         //Check Balance Method - Takes in User and totals all their transactions. 
