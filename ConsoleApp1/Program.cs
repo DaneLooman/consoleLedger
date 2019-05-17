@@ -60,7 +60,7 @@ namespace ConsoleApp1
                 }
                 else if (selection == 3)
                 {
-                    Console.WriteLine("This is your balance. Press Enter.");
+                    Console.WriteLine("Your balance is $" + Balance(user.UserAcctId, transactions) + ". Press Enter.");
                     Console.ReadLine();
                     return new Tuple<bool, List<Transaction>>(true, transactions);
                 }
@@ -151,6 +151,19 @@ namespace ConsoleApp1
                 UserId = userId
             };
             return transaction;
+        }
+        //Check Balance Method - Takes in User and totals all their transactions. 
+        static decimal Balance(int userId, List<Transaction> transactions)
+        {
+            decimal total = 0;
+            foreach(Transaction t in transactions)
+            {
+                if(t.UserId == userId)
+                {
+                    total = total + t.Amt;
+                }
+            }
+            return total;
         }
 
 
