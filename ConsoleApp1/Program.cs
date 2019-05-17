@@ -154,8 +154,8 @@ namespace ConsoleApp1
                 {
                     Transaction transaction = Deposit(user.UserAcctId);
                     Console.WriteLine("Are you sure you want to Deposit $" + transaction.Amt + "? Y/N");
-                    string input = Console.ReadLine();
-                    if (input == "Y")
+                    string input = Console.ReadLine().ToLower();
+                    if (input == "y")
                     {
                         transaction.Id = transactions.Count + 1;
                         transactions.Add(transaction);
@@ -174,8 +174,8 @@ namespace ConsoleApp1
                 {
                     Transaction transaction = Withdrawl(user.UserAcctId);
                     Console.WriteLine("Are you sure you want to Withdrawl $" + (transaction.Amt * -1) + "? Y/N");
-                    string input = Console.ReadLine();
-                    if (input == "Y")
+                    string input = Console.ReadLine().ToLower();
+                    if (input == "y")
                     { if ((Balance(user.UserAcctId, transactions) + transaction.Amt) > 0)
                         {
                             transaction.Id = transactions.Count + 1;
