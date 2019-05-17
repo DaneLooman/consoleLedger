@@ -8,46 +8,63 @@ namespace ConsoleApp1
 {
     class Program
     {
-        static bool MainMenu(User user)
+        //<------------Methods------------------------------------->
+        //Main Menu method returns a bool for if the user is logged in and returns a new version of the transaction list
+        static Tuple<bool, List<Transaction>> MainMenu(User user, List<Transaction> _transactions)
         {
             {
+                List<Transaction> transactions = _transactions;
                 Console.Clear();
                 Console.WriteLine(
                    user.UserAcctName + " Logged In\n Options:  \n 1: Deposit\n 2: Withdraw\n 3: Balance Check\n 4: History\n 5: Logout");
                 int selection = Convert.ToInt32(Console.ReadLine());
                 if (selection == 1)
                 {
-                    Console.WriteLine("You did a Deposit. Press Enter.");
-                    Console.ReadLine();
-                    return true;
+                    Transaction transaction = Deposit(user.UserAcctId);
+                    Console.WriteLine("Are you sure you want to Deposit $" + transaction.Amt + "? Y/N");
+                    string input = Console.ReadLine();
+                    if (input == "Y")
+                    {
+                        transaction.Id = transactions.Count + 1;
+                        transactions.Add(transaction);
+                        Console.WriteLine("Deposit Successful. Press Enter.");
+                        Console.ReadLine();
+                        return new Tuple<bool, List<Transaction>>(true, transactions);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Deposit Cancelled. Press Enter.");
+                        Console.ReadLine();
+                        return new Tuple<bool, List<Transaction>>(true, transactions);
+                    }                  
                 }
                 else if (selection == 2)
                 {
                     Console.WriteLine("You withdrew. Press Enter.");
                     Console.ReadLine();
-                    return true;
+                    return new Tuple<bool, List<Transaction>>(true, transactions);
                 }
                 else if (selection == 3)
                 {
                     Console.WriteLine("This is your balance. Press Enter.");
                     Console.ReadLine();
-                    return true;
+                    return new Tuple<bool, List<Transaction>>(true, transactions);
                 }
                 else if (selection == 4)
                 {
                     Console.WriteLine("This is your history. Press Enter.");
                     Console.ReadLine();
-                    return true;
+                    return new Tuple<bool, List<Transaction>>(true, transactions);
                 }
                 else if (selection == 5)
-                {                
-                    return false;
+                {
+                    return new Tuple<bool, List<Transaction>>(false, transactions);
                 }
                 else
                 {
                     Console.WriteLine("Please only input numbers.");
                     Console.ReadLine();
-                    return true;
+                    return new Tuple<bool, List<Transaction>>(true, transactions);
                 }
             }
         }
@@ -73,12 +90,10 @@ namespace ConsoleApp1
 
 
 
-
-
-
         static void Main(string[] args)
         {
             List<User> userAccts = new List<User>();
+            List<Transaction> transactions = new List<Transaction>();
             User currentUser = new User();
             bool loggedIn = false; 
 
@@ -146,7 +161,9 @@ namespace ConsoleApp1
             }
             while (loggedIn == true)
             {
-                loggedIn = MainMenu(currentUser);
+                var results = (MainMenu(currentUser, transactions));
+                transactions = results.Item2;
+                loggedIn = results.Item1;
             }
 
             Console.WriteLine("You have logged out");
