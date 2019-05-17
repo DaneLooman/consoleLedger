@@ -73,7 +73,8 @@ namespace ConsoleApp1
                 }
                 else if (selection == 4)
                 {
-                    Console.WriteLine("This is your history. Press Enter.");
+                    History(user.UserAcctId, transactions);
+                    Console.WriteLine("This is the end of your history. Press Enter.");
                     Console.ReadLine();
                     return new Tuple<bool, List<Transaction>>(true, transactions);
                 }
@@ -172,9 +173,16 @@ namespace ConsoleApp1
             }
             return total;
         }
+        //List all Transactions. 
+        static void History(int userId, List<Transaction> transactions)
+        {
+            foreach(Transaction t in transactions)
+            {
+                Console.WriteLine("Trans ID:" + t.Id + " Amt:" + t.Amt + " Memo:" + t.Memo);
+            }
+        }
 
-
-
+//----------------------Main Program---------------------------//
         static void Main(string[] args)
         {
             List<User> userAccts = new List<User>();
