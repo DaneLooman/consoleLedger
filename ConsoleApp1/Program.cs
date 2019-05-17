@@ -8,6 +8,50 @@ namespace ConsoleApp1
 {
     class Program
     {
+        static bool MainMenu(User user)
+        {
+            {
+                Console.Clear();
+                Console.WriteLine(
+                   user.UserAcctName + " Logged In\n Options:  \n 1: Deposit\n 2: Withdraw\n 3: Balance Check\n 4: History\n 5: Logout");
+                int selection = Convert.ToInt32(Console.ReadLine());
+                if (selection == 1)
+                {
+                    Console.WriteLine("You did a Deposit. Press Enter.");
+                    Console.ReadLine();
+                    return true;
+                }
+                else if (selection == 2)
+                {
+                    Console.WriteLine("You withdrew. Press Enter.");
+                    Console.ReadLine();
+                    return true;
+                }
+                else if (selection == 3)
+                {
+                    Console.WriteLine("This is your balance. Press Enter.");
+                    Console.ReadLine();
+                    return true;
+                }
+                else if (selection == 4)
+                {
+                    Console.WriteLine("This is your history. Press Enter.");
+                    Console.ReadLine();
+                    return true;
+                }
+                else if (selection == 5)
+                {                
+                    return false;
+                }
+                else
+                {
+                    Console.WriteLine("Please only input numbers.");
+                    Console.ReadLine();
+                    return true;
+                }
+            }
+        }
+
         static Transaction Deposit(int userId)
         {
             Console.WriteLine("How much would you like to deposit?");
@@ -102,24 +146,9 @@ namespace ConsoleApp1
             }
             while (loggedIn == true)
             {
-                Console.Clear();
-                Console.WriteLine(
-                   currentUser.UserAcctName + " Logged In\n Options:  \n 1: Deposit\n 2: Withdraw\n 3: Balance Check\n 4: History\n 5: Logout");
-                int selection = Convert.ToInt32(Console.ReadLine());
-                if (selection == 1) {
-                    Console.WriteLine("You did a Deposit");
-                } else if (selection == 2){
-                    Console.WriteLine("You withdrew");
-                } else if (selection == 3) {
-                    Console.WriteLine("This is your balance");
-                } else if (selection == 4) {
-                    Console.WriteLine("This is your history");
-                } else if (selection == 5) {
-                    currentUser = null;
-                    loggedIn = false;
-                    Console.Clear();
-                } else {}
+                loggedIn = MainMenu(currentUser);
             }
+
             Console.WriteLine("You have logged out");
             Console.Read();
         }
