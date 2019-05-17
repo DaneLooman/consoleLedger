@@ -8,7 +8,7 @@ namespace ConsoleApp1
 {
     class Program
     {
-        //<------------Methods------------------------------------->
+    //<------------Methods------------------------------------->
         //Start Menu (create account, log in and run main menu, or shut down program)
 
        static Tuple<bool, List<User>, List<Transaction>> Start(List<User> users, List<Transaction> transactions)
@@ -222,6 +222,7 @@ namespace ConsoleApp1
                 }
             }
         }
+        
         //Seed Data Dummy User and Transactions. 
         static Tuple<List<User>, List<Transaction>> SeedData(List<User> _users, List<Transaction> _transactions)
         {
@@ -258,6 +259,7 @@ namespace ConsoleApp1
                 return new Tuple<List<User>, List<Transaction>>(users, transactions);
             };
         }
+        
         // Deposit Transaction Creation
         static Transaction Deposit(int userId)
         {
@@ -275,6 +277,7 @@ namespace ConsoleApp1
             };
             return transaction;
         }
+        
         //Withdrawl Transaction Creation
         static Transaction Withdrawl(int userId)
         {
@@ -292,6 +295,7 @@ namespace ConsoleApp1
             };
             return transaction;
         }
+       
         //Check Balance Method - Takes in User and totals all their transactions. 
         static decimal Balance(int userId, List<Transaction> transactions)
         {
@@ -305,6 +309,7 @@ namespace ConsoleApp1
             }
             return total;
         }
+        
         //List all Transactions. 
         static void History(int userId, List<Transaction> transactions)
         {
@@ -314,7 +319,7 @@ namespace ConsoleApp1
             }
         }
 
-        //----------------------Main Program---------------------------//
+    //----------------------Main Program---------------------------//
         static void Main(string[] args)
         {
             List<User> userAccts = new List<User>();
