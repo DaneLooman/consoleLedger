@@ -372,7 +372,11 @@ namespace ConsoleApp1
         {
             foreach(Transaction t in transactions)
             {
-                Console.WriteLine("Trans ID:" + t.Id + " Amt:$" + t.Amt + " Memo:" + t.Memo);
+                if (t.UserId == userId)
+                {
+                    Console.WriteLine("Trans ID:" + t.Id + " Amt:$" + t.Amt + " Memo:" + t.Memo);
+                }
+                
             }
         }
 
