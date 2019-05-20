@@ -8,30 +8,41 @@ namespace ConsoleApp1
 {
     class Program
     {
-    //<------------Methods------------------------------------->
+        //<------------Methods------------------------------------->
+        //Virtual Method To ReadLine (Allows for override in testing)
+        public class InputRetriever
+        {
+            public virtual string GetInput()
+            {
+                return Console.ReadLine();
+            }
+        }
+
+
         //Start Menu (create account, log in and run main menu, or shut down program)
-       static Tuple<bool, List<User>, List<Transaction>> Start(List<User> users, List<Transaction> transactions)
+        static Tuple<bool, List<User>, List<Transaction>> Start(List<User> users, List<Transaction> transactions)
         {
             User currentUser = new User();
             Console.Clear();
             Console.WriteLine("Chose an option:\n1: Create New Account\n2: Log In\n3: Shut Down");
+            InputRetriever input = new InputRetriever();
             int selection;
-            bool success = Int32.TryParse(Console.ReadLine(), out selection);
+            bool success = Int32.TryParse(input.GetInput(), out selection);
             if (success)
             {
                 if (selection == 1)
                 {
-                    Console.WriteLine("Please enter your full email address");
-                    string emailResult = Console.ReadLine().Trim().ToLower();
+                    Console.WriteLine("Please enter your full email address");                    
+                    string emailResult = input.GetInput().Trim().ToLower();
 
                     if (users.FindIndex(u => u.UserAcctName == emailResult) < 0)
                     {
                         currentUser.UserAcctName = emailResult;
                         Console.WriteLine("Please create a password");
-                        string passResult1 = Console.ReadLine();
+                        string passResult1 = input.GetInput();
 
                         Console.WriteLine("Confirm your password");
-                        string passResult2 = Console.ReadLine();
+                        string passResult2 = input.GetInput();
 
                         if (passResult1 == passResult2)
                         {
@@ -42,10 +53,10 @@ namespace ConsoleApp1
                             {
                                 Console.WriteLine("Sorry. Your passwords did not match. Please try again.");
                                 Console.WriteLine("Please create a password");
-                                passResult1 = Console.ReadLine();
+                                passResult1 = input.GetInput();
 
                                 Console.WriteLine("Confirm your password");
-                                passResult2 = Console.ReadLine();
+                                passResult2 = input.GetInput();
                             }
                         }
                         currentUser.UserAcctPassword = passResult1;
@@ -57,7 +68,7 @@ namespace ConsoleApp1
                     else
                     {
                         Console.WriteLine("This user already exists. Press enter to restart.");
-                        Console.ReadLine();
+                        input.GetInput();
                         return new Tuple<bool, List<User>, List<Transaction>>(true, users, transactions);
                     }
 
@@ -67,19 +78,19 @@ namespace ConsoleApp1
                     bool loggedIn = false;
                     Console.Clear();
                     Console.WriteLine("Type your email address to log in.");
-                    string result = Console.ReadLine().ToLower();
+                    string result = input.GetInput().ToLower();
                     if (users.FindIndex(u => u.UserAcctName == result) >= 0)
                     {
                         int attempts = 0;
                         User attemptUser = users.Find(u => u.UserAcctName == result);
                         string attemptPass;
                         Console.WriteLine("Please enter your password");
-                        attemptPass = Console.ReadLine();
+                        attemptPass = input.GetInput();
 
                         while (attemptPass != attemptUser.UserAcctPassword && attempts < 3)
                         {
                             Console.WriteLine("Sorry. That password does not match what we have on file. Please enter your password again.");
-                            attemptPass = Console.ReadLine();
+                            attemptPass = input.GetInput();
                             attempts++;
                         }
 
@@ -99,34 +110,34 @@ namespace ConsoleApp1
                             loggedIn = results.Item1;
                         }
                         Console.WriteLine("You have logged out. Press Enter to return to the Main Menu.");
-                        Console.ReadLine();
+                        input.GetInput();
                         return new Tuple<bool, List<User>, List<Transaction>>(true, users, transactions);
                     }
                     else
                     {
                         Console.WriteLine("Sorry. We could not find a user with that email address. Press Enter to try again.");
-                        Console.ReadLine();
+                        input.GetInput();
                         return new Tuple<bool, List<User>, List<Transaction>>(true, users, transactions);
                     }
                 }
                 else if (selection == 3)
                 {
                     Console.WriteLine("Are you sure you want to shut down? Y/N?");
-                    string result = Console.ReadLine().ToLower();
+                    string result = input.GetInput().ToLower();
                     if (result == "y")
                     {
                         return new Tuple<bool, List<User>, List<Transaction>>(false, users, transactions);
                     } else
                     {
                         Console.WriteLine("Shut Down Cancelled. Press Enter to restart");
-                        Console.ReadLine();
+                        input.GetInput();
                         return new Tuple<bool, List<User>, List<Transaction>>(true, users, transactions);
                     }
 
                 }
                 else {
                     Console.WriteLine("Please only enter numbers 1, 2, or 3. Press Enter to restart");
-                    Console.ReadLine();
+                    input.GetInput();
                     return new Tuple<bool, List<User>, List<Transaction>>(true, users, transactions);
                 }
 
@@ -134,7 +145,7 @@ namespace ConsoleApp1
             else
             {
                 Console.WriteLine("Please only enter numbers 1, 2, or 3. Press Enter to restart");
-                Console.ReadLine();
+                input.GetInput();
             }
             return new Tuple<bool, List<User>, List<Transaction>>(true, users, transactions);
         }
@@ -144,11 +155,12 @@ namespace ConsoleApp1
         {
             {
                 List<Transaction> transactions = _transactions;
+                InputRetriever input = new InputRetriever();
                 Console.Clear();
                 Console.WriteLine(
                    user.UserAcctName + " Logged In\n Options:  \n 1: Deposit\n 2: Withdraw\n 3: Balance Check\n 4: History\n 5: Logout");
                 int selection;
-                bool success = Int32.TryParse(Console.ReadLine(),out selection);
+                bool success = Int32.TryParse(input.GetInput(),out selection);
                 if (success)
                 {
                     if (selection == 1)
@@ -157,19 +169,19 @@ namespace ConsoleApp1
                         if (transaction != null)
                         {
                             Console.WriteLine("Are you sure you want to deposit $" + transaction.Amt + "? Y/N");
-                            string input = Console.ReadLine().ToLower();
-                            if (input == "y")
+                            string choice = input.GetInput().ToLower();
+                            if (choice == "y")
                             {
                                 transaction.Id = transactions.Count + 1;
                                 transactions.Add(transaction);
                                 Console.WriteLine("Deposit successful. Press enter.");
-                                Console.ReadLine();
+                                input.GetInput();
                                 return new Tuple<bool, List<Transaction>>(true, transactions);
                             }
                             else
                             {
                                 Console.WriteLine("Deposit cancelled. Press enter.");
-                                Console.ReadLine();
+                                input.GetInput();
                                 return new Tuple<bool, List<Transaction>>(true, transactions);
                             }
                         } else
@@ -184,28 +196,28 @@ namespace ConsoleApp1
                         if (transaction != null)
                         {
                             Console.WriteLine("Are you sure you want to withdrawl $" + (transaction.Amt * -1) + "? Y/N");
-                            string input = Console.ReadLine().ToLower();
-                            if (input == "y")
+                            string choice = input.GetInput().ToLower();
+                            if (choice == "y")
                             {
                                 if ((Balance(user.UserAcctId, transactions) + transaction.Amt) > 0)
                                 {
                                     transaction.Id = transactions.Count + 1;
                                     transactions.Add(transaction);
                                     Console.WriteLine("Withdrawl successful. Press enter.");
-                                    Console.ReadLine();
+                                    input.GetInput();
                                     return new Tuple<bool, List<Transaction>>(true, transactions);
                                 }
                                 else
                                 {
                                     Console.WriteLine("Withdrawl cancelled. Balance too low. Press enter.");
-                                    Console.ReadLine();
+                                    input.GetInput();
                                     return new Tuple<bool, List<Transaction>>(true, transactions);
                                 }
                             }
                             else
                             {
                                 Console.WriteLine("Withdrawl cancelled. Press enter.");
-                                Console.ReadLine();
+                                input.GetInput();
                                 return new Tuple<bool, List<Transaction>>(true, transactions);
                             }
                         } else
@@ -217,14 +229,14 @@ namespace ConsoleApp1
                     else if (selection == 3)
                     {
                         Console.WriteLine("Your balance is $" + Balance(user.UserAcctId, transactions) + ". Press Enter.");
-                        Console.ReadLine();
+                        input.GetInput();
                         return new Tuple<bool, List<Transaction>>(true, transactions);
                     }
                     else if (selection == 4)
                     {
                         History(user.UserAcctId, transactions);
                         Console.WriteLine("This is the end of your history. Press enter.");
-                        Console.ReadLine();
+                        input.GetInput();
                         return new Tuple<bool, List<Transaction>>(true, transactions);
                     }
                     else if (selection == 5)
@@ -234,13 +246,13 @@ namespace ConsoleApp1
                     else
                     {
                         Console.WriteLine("Please only input numbers 1, 2, 3, 4, or 5.");
-                        Console.ReadLine();
+                        input.GetInput();
                         return new Tuple<bool, List<Transaction>>(true, transactions);
                     }
                 } else
                 {
                     Console.WriteLine("Please only input numbers. Press enter to try again.");
-                    Console.ReadLine();
+                    input.GetInput();
                     return new Tuple<bool, List<Transaction>>(true, transactions);
                 }
             }
@@ -287,13 +299,14 @@ namespace ConsoleApp1
         static Transaction Deposit(int userId)
         {
             Console.WriteLine("How much would you like to deposit?");
+            InputRetriever input = new InputRetriever();
             decimal inputAmt;
             bool success = decimal.TryParse(Console.ReadLine(),out inputAmt);
 
             if (success)
             {
                 Console.WriteLine("Please add a note to this transaction.");
-                string inputMemo = Console.ReadLine();
+                string inputMemo = input.GetInput();
 
                 Transaction transaction = new Transaction
                 {
@@ -306,7 +319,7 @@ namespace ConsoleApp1
             else
             {
                 Console.WriteLine("Please only enter values in 00.00 format with no symbols. Press enter to rety.");
-                Console.ReadLine();
+                input.GetInput();
                 return null;
             }          
         }
@@ -317,11 +330,12 @@ namespace ConsoleApp1
             Console.WriteLine("How much would you like to withdrawl?");
             decimal inputAmt;
             bool success = Decimal.TryParse(Console.ReadLine(), out inputAmt);
+            InputRetriever input = new InputRetriever();
 
             if (success)
             {
                 Console.WriteLine("You may add a note to this transaction.");
-                string inputMemo = Console.ReadLine();
+                string inputMemo = input.GetInput();
 
                 Transaction transaction = new Transaction
                 {
@@ -333,7 +347,7 @@ namespace ConsoleApp1
             } else
             {
                 Console.WriteLine("Please only enter values in 00.00 format with no symbols. Press enter to rety.");
-                Console.ReadLine();
+                input.GetInput();
                 return null;
             }
             
