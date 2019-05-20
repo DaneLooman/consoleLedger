@@ -9,7 +9,7 @@ namespace ConsoleApp1
     class Program
     {
         //<------------Methods------------------------------------->
-        //Virtual Method To ReadLine (Allows for override in testing)
+        //Virtual Method To ReadLine (Allows for override in testing. Will need multiple copies for multiple selections in testing.)
         public class InputRetriever
         {
             public virtual string GetInput()
