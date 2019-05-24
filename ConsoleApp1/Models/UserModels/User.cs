@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ConsoleApp1.Models.UserModels
 {
-    class User
+    public class User
     {
         public int UserAcctId { get; set; }
         public string UserAcctPassword { get; set; }

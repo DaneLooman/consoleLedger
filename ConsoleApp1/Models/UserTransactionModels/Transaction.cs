@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ConsoleApp1.Models.UserTransactionModels
 {
-    class Transaction
+   public class Transaction
     {
         public int Id { get; set; }
         public string Memo { get; set; }
