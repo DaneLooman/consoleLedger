@@ -218,7 +218,7 @@ namespace ConsoleApp1
                         Transaction transaction = Withdrawl(user.UserAcctId);
                         if (transaction != null)
                         {
-                            Console.WriteLine("Are you sure you want to withdrawl $" + (transaction.Amt * -1) + "? Y/N");
+                            Console.WriteLine("Are you sure you want to withdrawal $" + (transaction.Amt * -1) + "? Y/N");
                             string choice = input.GetInput().ToLower();
                             if (choice == "y")
                             {
@@ -226,20 +226,20 @@ namespace ConsoleApp1
                                 {
                                     transaction.Id = transactions.Count + 1;
                                     transactions.Add(transaction);
-                                    Console.WriteLine("Withdrawl successful. Press enter.");
+                                    Console.WriteLine("Withdrawal successful. Press enter.");
                                     input.GetInput();
                                     return new Tuple<bool, List<Transaction>>(true, transactions);
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Withdrawl cancelled. Balance too low. Press enter.");
+                                    Console.WriteLine("Withdrawal cancelled. Balance too low. Press enter.");
                                     input.GetInput();
                                     return new Tuple<bool, List<Transaction>>(true, transactions);
                                 }
                             }
                             else
                             {
-                                Console.WriteLine("Withdrawl cancelled. Press enter.");
+                                Console.WriteLine("Withdrawal cancelled. Press enter.");
                                 input.GetInput();
                                 return new Tuple<bool, List<Transaction>>(true, transactions);
                             }
@@ -306,7 +306,7 @@ namespace ConsoleApp1
                 {
                     Amt = -15.25m,
                     Id = 2,
-                    Memo = "First Withdrawl",
+                    Memo = "First Withdraw",
                     UserId = 1
                 };
                 transactions.Add(demoDeposit);
@@ -350,7 +350,7 @@ namespace ConsoleApp1
         //Withdrawl Transaction Creation
         static Transaction Withdrawl(int userId)
         {
-            Console.WriteLine("How much would you like to withdrawl?");
+            Console.WriteLine("How much would you like to withdrawal?");
             decimal inputAmt;
             bool success = Decimal.TryParse(Console.ReadLine(), out inputAmt);
             InputRetriever input = new InputRetriever();
