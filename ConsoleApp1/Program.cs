@@ -18,6 +18,52 @@ namespace ConsoleApp1
             }
         }
 
+        //Create Account Method
+        static public List<User> CreateUser(List<User> _users)
+        {
+            InputRetriever input = new InputRetriever();
+            User currentUser = new User();
+            var users = _users;
+            Console.WriteLine("Please enter your full email address");
+            string emailResult = input.GetInput().Trim().ToLower();
+
+            if (users.FindIndex(u => u.UserAcctName == emailResult) < 0)
+            {
+                currentUser.UserAcctName = emailResult;
+                Console.WriteLine("Please create a password");
+                string passResult1 = input.GetInput();
+
+                Console.WriteLine("Confirm your password");
+                string passResult2 = input.GetInput();
+
+                if (passResult1 == passResult2)
+                {
+                }
+                else
+                {
+                    while (passResult1 != passResult2)
+                    {
+                        Console.WriteLine("Sorry. Your passwords did not match. Please try again.");
+                        Console.WriteLine("Please create a password");
+                        passResult1 = input.GetInput();
+
+                        Console.WriteLine("Confirm your password");
+                        passResult2 = input.GetInput();
+                    }
+                }
+                currentUser.UserAcctPassword = passResult1;
+                currentUser.UserAcctId = users.Count + 1;
+                users.Add(currentUser);
+                return users;
+
+            }
+            else
+            {
+                Console.WriteLine("This user already exists. Press enter to restart.");
+                input.GetInput();
+                return users;
+            }
+        }
 
         //Start Menu (create account, log in and run main menu, or shut down program)
         static Tuple<bool, List<User>, List<Transaction>> Start(List<User> users, List<Transaction> transactions)
@@ -32,46 +78,8 @@ namespace ConsoleApp1
             {
                 if (selection == 1)
                 {
-                    Console.WriteLine("Please enter your full email address");                    
-                    string emailResult = input.GetInput().Trim().ToLower();
-
-                    if (users.FindIndex(u => u.UserAcctName == emailResult) < 0)
-                    {
-                        currentUser.UserAcctName = emailResult;
-                        Console.WriteLine("Please create a password");
-                        string passResult1 = input.GetInput();
-
-                        Console.WriteLine("Confirm your password");
-                        string passResult2 = input.GetInput();
-
-                        if (passResult1 == passResult2)
-                        {
-                        }
-                        else
-                        {
-                            while (passResult1 != passResult2)
-                            {
-                                Console.WriteLine("Sorry. Your passwords did not match. Please try again.");
-                                Console.WriteLine("Please create a password");
-                                passResult1 = input.GetInput();
-
-                                Console.WriteLine("Confirm your password");
-                                passResult2 = input.GetInput();
-                            }
-                        }
-                        currentUser.UserAcctPassword = passResult1;
-                        currentUser.UserAcctId = users.Count + 1;
-                        users.Add(currentUser);
-                        return new Tuple<bool, List<User>, List<Transaction>>(true, users, transactions);
-
-                    }
-                    else
-                    {
-                        Console.WriteLine("This user already exists. Press enter to restart.");
-                        input.GetInput();
-                        return new Tuple<bool, List<User>, List<Transaction>>(true, users, transactions);
-                    }
-
+                    users = CreateUser(users);
+                    return new Tuple<bool, List<User>, List<Transaction>>(true, users, transactions);
                 }
                 else if (selection == 2)
                 {
