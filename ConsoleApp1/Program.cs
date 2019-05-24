@@ -65,6 +65,61 @@ namespace ConsoleApp1
             }
         }
 
+        //Log in Method. Also home of main menu. 
+
+        static public Tuple<List<User>,List<Transaction>> LogIn(List<User> _users, List<Transaction> _transactions)
+        {
+            User currentUser = new User();
+            InputRetriever input = new InputRetriever();
+            var users = _users;
+            var transactions = _transactions;
+            bool loggedIn = false;
+            Console.Clear();
+            Console.WriteLine("Type your email address to log in.");
+            string result = input.GetInput().ToLower();
+            if (users.FindIndex(u => u.UserAcctName == result) >= 0)
+            {
+                int attempts = 0;
+                User attemptUser = users.Find(u => u.UserAcctName == result);
+                string attemptPass;
+                Console.WriteLine("Please enter your password");
+                attemptPass = input.GetInput();
+
+                while (attemptPass != attemptUser.UserAcctPassword && attempts < 3)
+                {
+                    Console.WriteLine("Sorry. That password does not match what we have on file. Please enter your password again.");
+                    attemptPass = input.GetInput();
+                    attempts++;
+                }
+
+                if (attemptPass != attemptUser.UserAcctPassword && attempts >= 3)
+                {
+                    Console.WriteLine("Sorry. Maximum attempts (3) exceeded.");
+                }
+                else
+                {
+                    currentUser = attemptUser;
+                    loggedIn = true;
+                }
+                while (loggedIn == true)
+                {
+                    var results = (MainMenu(currentUser, transactions));
+                    transactions = results.Item2;
+                    loggedIn = results.Item1;
+                }
+                Console.WriteLine("You have logged out. Press Enter to return to the Main Menu.");
+                input.GetInput();
+                return new Tuple<List<User>, List<Transaction>>(users, transactions);
+            }
+            else
+            {
+                Console.WriteLine("Sorry. We could not find a user with that email address. Press Enter to try again.");
+                input.GetInput();
+                return new Tuple<List<User>, List<Transaction>>(users, transactions);
+            }
+
+        }
+
         //Start Menu (create account, log in and run main menu, or shut down program)
         static Tuple<bool, List<User>, List<Transaction>> Start(List<User> users, List<Transaction> transactions)
         {
@@ -83,50 +138,10 @@ namespace ConsoleApp1
                 }
                 else if (selection == 2)
                 {
-                    bool loggedIn = false;
-                    Console.Clear();
-                    Console.WriteLine("Type your email address to log in.");
-                    string result = input.GetInput().ToLower();
-                    if (users.FindIndex(u => u.UserAcctName == result) >= 0)
-                    {
-                        int attempts = 0;
-                        User attemptUser = users.Find(u => u.UserAcctName == result);
-                        string attemptPass;
-                        Console.WriteLine("Please enter your password");
-                        attemptPass = input.GetInput();
-
-                        while (attemptPass != attemptUser.UserAcctPassword && attempts < 3)
-                        {
-                            Console.WriteLine("Sorry. That password does not match what we have on file. Please enter your password again.");
-                            attemptPass = input.GetInput();
-                            attempts++;
-                        }
-
-                        if (attemptPass != attemptUser.UserAcctPassword && attempts >= 3)
-                        {
-                            Console.WriteLine("Sorry. Maximum attempts (3) exceeded.");
-                        }
-                        else
-                        {
-                            currentUser = attemptUser;
-                            loggedIn = true;
-                        }
-                        while (loggedIn == true)
-                        {
-                            var results = (MainMenu(currentUser, transactions));
-                            transactions = results.Item2;
-                            loggedIn = results.Item1;
-                        }
-                        Console.WriteLine("You have logged out. Press Enter to return to the Main Menu.");
-                        input.GetInput();
-                        return new Tuple<bool, List<User>, List<Transaction>>(true, users, transactions);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Sorry. We could not find a user with that email address. Press Enter to try again.");
-                        input.GetInput();
-                        return new Tuple<bool, List<User>, List<Transaction>>(true, users, transactions);
-                    }
+                    var results = LogIn(users, transactions);
+                    users = results.Item1;
+                    transactions = results.Item2;
+                    return new Tuple<bool, List<User>, List<Transaction>>(true, users, transactions);         
                 }
                 else if (selection == 3)
                 {
