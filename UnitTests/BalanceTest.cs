@@ -28,12 +28,15 @@ namespace UnitTests
             };
             testTransactions.Add(transaction2);
             decimal expected = 50.25m;
+            decimal expected2 = 10.50m;
 
             //Act
             var actual = Program.Balance(100, testTransactions);
+            var actual2 = Program.Balance(99, testTransactions);
 
             //Assert
             Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected2, actual2);
         }
     }
 }
