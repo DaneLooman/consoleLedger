@@ -19,7 +19,7 @@ namespace ConsoleApp1
         }
 
         //Create Account Method
-        public static List<User> CreateUser(List<User> _users)
+        public List<User> CreateUser(List<User> _users)
         {
             InputRetriever input = new InputRetriever();
             User currentUser = new User();
@@ -66,7 +66,7 @@ namespace ConsoleApp1
         }
 
         //Log in Method. Also home of main menu. 
-        public static Tuple<List<User>,List<Transaction>> LogIn(List<User> _users, List<Transaction> _transactions)
+        public Tuple<List<User>,List<Transaction>> LogIn(List<User> _users, List<Transaction> _transactions)
         {
             User currentUser = new User();
             InputRetriever input = new InputRetriever();
@@ -120,7 +120,7 @@ namespace ConsoleApp1
         }
 
         //Start Menu (create account, log in and run main menu, or shut down program)
-        public static Tuple<bool, List<User>, List<Transaction>> Start(List<User> users, List<Transaction> transactions)
+        public Tuple<bool, List<User>, List<Transaction>> Start(List<User> users, List<Transaction> transactions)
         {
             User currentUser = new User();
             Console.Clear();
@@ -173,7 +173,7 @@ namespace ConsoleApp1
         }
                     
         //Main Menu method once a User is logged in.
-        public static Tuple<bool, List<Transaction>> MainMenu(User user, List<Transaction> _transactions)
+        public Tuple<bool, List<Transaction>> MainMenu(User user, List<Transaction> _transactions)
         {
             {
                 List<Transaction> transactions = _transactions;
@@ -281,7 +281,7 @@ namespace ConsoleApp1
         }
         
         //Seed Data Dummy User and Transactions. 
-        public static Tuple<List<User>, List<Transaction>> SeedData(List<User> _users, List<Transaction> _transactions)
+        public Tuple<List<User>, List<Transaction>> SeedData(List<User> _users, List<Transaction> _transactions)
         {
             List<User> users = _users;
             List<Transaction> transactions = _transactions;
@@ -318,7 +318,7 @@ namespace ConsoleApp1
         }
         
         // Deposit Transaction Creation
-        public static Transaction Deposit(int userId)
+        public Transaction Deposit(int userId)
         {
             Console.WriteLine("How much would you like to deposit?");
             InputRetriever input = new InputRetriever();
@@ -347,7 +347,7 @@ namespace ConsoleApp1
         }
         
         //Withdrawl Transaction Creation
-       public static Transaction Withdrawl(int userId)
+       public Transaction Withdrawl(int userId)
         {
             Console.WriteLine("How much would you like to withdrawal?");
             decimal inputAmt;
@@ -376,7 +376,7 @@ namespace ConsoleApp1
         }
        
         //Check Balance Method - Takes in User and totals all their transactions. 
-       public static decimal Balance(int userId, List<Transaction> transactions)
+       public decimal Balance(int userId, List<Transaction> transactions)
         {
             decimal total = 0;
             foreach(Transaction t in transactions)
@@ -390,7 +390,7 @@ namespace ConsoleApp1
         }
         
         //List all Transactions. 
-        public static void History(int userId, List<Transaction> transactions)
+        public void History(int userId, List<Transaction> transactions)
         {
             foreach(Transaction t in transactions)
             {
@@ -405,9 +405,10 @@ namespace ConsoleApp1
     //----------------------Main Program---------------------------//
        public static void Main(string[] args)
         {
+            var prg = new Program();
             List<User> userAccts = new List<User>();
             List<Transaction> transactions = new List<Transaction>();
-            var seedResult = SeedData(userAccts, transactions);
+            var seedResult = prg.SeedData(userAccts, transactions);
             userAccts = seedResult.Item1;
             transactions = seedResult.Item2;
             User currentUser = new User();
@@ -415,7 +416,7 @@ namespace ConsoleApp1
 
             while (running == true)
             {
-                var results = Start(userAccts, transactions);
+                var results = prg.Start(userAccts, transactions);
                 userAccts = results.Item2;
                 transactions = results.Item3;
                 running = results.Item1;

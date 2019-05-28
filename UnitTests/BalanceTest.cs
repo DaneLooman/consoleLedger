@@ -11,6 +11,7 @@ namespace UnitTests
         [TestMethod]
         public void BalanceCheckGetsOnlyUsersTransactions()
         {
+            var prg = new Program();
             //Arrange
             List<Transaction> testTransactions = new List<Transaction>();
             Transaction transaction1 = new Transaction
@@ -31,8 +32,8 @@ namespace UnitTests
             decimal expected2 = 10.50m;
 
             //Act
-            var actual = Program.Balance(100, testTransactions);
-            var actual2 = Program.Balance(99, testTransactions);
+            var actual = prg.Balance(100, testTransactions);
+            var actual2 = prg.Balance(99, testTransactions);
 
             //Assert
             Assert.AreEqual(expected, actual);
